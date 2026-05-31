@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import type { AgentRun, LoanFile } from "../lib/api";
 import {
   createLoan,
+  DEMO_LOANS,
   fetchLoans,
   fetchAuditLogs,
   fetchModelTraces,
@@ -18,8 +19,9 @@ type Props = {
 };
 
 export function LoanWorkspace({ loans }: Props) {
-  const [loanFiles, setLoanFiles] = useState(loans);
-  const [selectedId, setSelectedId] = useState(loans[0]?.id || "");
+  const initialLoans = loans.length ? loans : DEMO_LOANS;
+  const [loanFiles, setLoanFiles] = useState(initialLoans);
+  const [selectedId, setSelectedId] = useState(initialLoans[0]?.id || "");
   const [agentRun, setAgentRun] = useState<AgentRun | null>(null);
   const [evals, setEvals] = useState<any>(null);
   const [loading, setLoading] = useState(false);

@@ -17,13 +17,24 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
   headers.delete("host");
   headers.delete("content-length");
 
-  const hasBody = !["GET", "HEAD"].includes(request.method);
-  const response = await fetch(url, {
-    method: request.method,
-    headers,
-    body: hasBody ? await request.arrayBuffer() : undefined,
-    cache: "no-store"
-  });
+  let response: Response;
+  try {
+    const hasBody = !["GET", "HEAD"].includes(request.method);
+    response = await fetch(url, {
+      method: request.method,
+      headers,
+      body: hasBody ? await request.arrayBuffer() : undefined,
+      cache: "no-store"
+    });
+  } catch {
+    return Response.json(
+      {
+        error: "Backend unavailable",
+        detail: "The API service is starting or unreachable."
+      },
+      { status: 503 }
+    );
+  }
 
   return new Response(response.body, {
     status: response.status,
