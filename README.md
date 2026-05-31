@@ -1,8 +1,33 @@
 # LoanOps AI Agent
 
-LoanOps AI Agent is a production-minded mortgage lending workflow that helps loan teams create borrower files, upload documents, run an AI review agent asynchronously, identify missing conditions, score underwriting readiness, draft borrower follow-up messages, and review audit logs/model traces.
+LoanOps AI Agent is a live mortgage AI workflow built for lender operations. It shows how an AI agent can help a loan team move from borrower intake to document review, missing-condition detection, underwriting readiness scoring, borrower follow-up, evals, audit logs, and model traces in one working product.
 
-This project was built for a Forward Deployed AI Engineer role in lending AI. It focuses on the same applied-AI problems Addy AI works on: borrower communication, document intake, underwriting support, agent workflows, evals, and production observability.
+It was built for Addy AI's Forward Deployed AI Engineer role and focuses on the same applied lending problems Addy describes: borrower communication, document processing, underwriting support, agent workflows, customer-facing product delivery, evals, and operational observability.
+
+## Quick Demo
+
+Live site:
+
+```text
+https://loanops-frontend.onrender.com
+```
+
+How to operate the site:
+
+1. Open the live site and wait for the Render service to wake up if needed.
+2. Select a borrower such as `Emily Carter`, `Michael Reynolds`, `Sarah Miller`, or `David Thompson`.
+3. Review the loan file details: loan amount, property value, LTV, credit score, employment type, notes, and uploaded documents.
+4. Click **Run agent** to generate the AI-assisted file review.
+5. Inspect the readiness score, missing conditions, risk findings, next actions, borrower follow-up message, and RAG citations.
+6. Click **Run evals** to see the regression suite result.
+7. Change the role to `Underwriter` or `Admin`, then click **Load audit/traces** to review audit logs and model traces.
+
+What to look for:
+
+- The agent translates borrower, loan, document, and guideline context into structured lending recommendations.
+- Missing conditions change based on loan purpose, employment type, credit score, LTV, and available documents.
+- The borrower message is written in lender-safe language instead of exposing internal risk scoring.
+- The demo can run without an OpenAI key through deterministic fallback behavior, while the backend remains OpenAI-ready through environment variables.
 
 ## What It Does
 
@@ -11,24 +36,23 @@ This project was built for a Forward Deployed AI Engineer role in lending AI. It
 3. The backend stores loan/document data in PostgreSQL.
 4. Uploaded documents are saved through a storage abstraction.
 5. PDF/text/image documents are parsed with PDF extraction and OCR hooks.
-6. The frontend enqueues an async agent run.
-7. Redis/RQ sends the job to a worker.
-8. The worker retrieves lending guideline context, checks the loan file, and returns:
+6. The frontend triggers the agent review.
+7. The backend retrieves lending guideline context, checks the loan file, and returns:
    - missing conditions
    - underwriting readiness score
    - risk findings
    - next-best actions
    - borrower-ready follow-up message
    - RAG citations
-9. Audit logs and model traces are stored for review.
-10. Evals verify that important agent behavior has not regressed.
+8. Audit logs and model traces are stored for review.
+9. Evals verify that important agent behavior has not regressed.
 
 ## Tech Stack
 
 - **Frontend:** Next.js, TypeScript, React
 - **Backend:** Python, Flask
 - **Database:** PostgreSQL
-- **Queue:** Redis + RQ worker
+- **Queue:** Redis + RQ worker locally; synchronous free mode on Render
 - **AI:** RAG-style retrieval, optional OpenAI generation
 - **Documents:** PDF text extraction, OCR hooks with Tesseract
 - **Storage:** Local Docker volume by default, S3/GCS/Firebase adapters included
@@ -52,13 +76,6 @@ Flask API -------------- PostgreSQL
    |                         |-- audit logs
    |                         |-- model traces
    |
-   | enqueue job
-   v
-Redis Queue
-   |
-   v
-RQ Worker
-   |
    |-- loads loan/document context
    |-- retrieves guideline context
    |-- runs mortgage AI agent
@@ -72,7 +89,7 @@ Agent Result
 - Create new borrower loan files end to end.
 - Upload borrower documents to a persistent backend.
 - Store loans, documents, audit logs, and traces in PostgreSQL.
-- Run agent reviews asynchronously through Redis/RQ.
+- Run agent reviews synchronously in the free live demo, with Redis/RQ worker code available for local async processing.
 - Retrieve mortgage guideline context for grounded recommendations.
 - Detect missing documents for purchase, refinance, W2, and self-employed scenarios.
 - Score readiness and flag high-LTV, credit, variable-income, and missing-condition risks.
@@ -366,20 +383,3 @@ frontend/
 demo_uploads/
 docker-compose.yml
 ```
-
-## How To Explain It
-
-Short pitch:
-
-> LoanOps AI Agent is an end-to-end mortgage AI workflow. A lender can create a borrower file, upload documents, process an async AI review, identify missing conditions, draft borrower follow-up, and review audit logs/model traces. It uses Next.js, Flask, PostgreSQL, Redis/RQ, Docker, RAG-style retrieval, document parsing, and evals.
-
-Why it is production-minded:
-
-> The agent runs asynchronously, data is persisted in PostgreSQL, uploaded documents go through a storage abstraction, important actions are audited, model runs are traced, and evals guard against regressions.
-
-## Known Tradeoffs
-
-- Auth is intentionally simplified with headers for demo purposes. In production, use real identity providers and session/JWT enforcement.
-- Local RAG retrieval is lightweight and inspectable. In production, this could be upgraded to embeddings and a vector database.
-- OCR is supported through Tesseract, but production document processing would likely include richer classification, layout extraction, confidence scores, and human review queues.
-- Cloud storage adapters are included, but the local demo defaults to Docker volume storage so it can run without credentials.
