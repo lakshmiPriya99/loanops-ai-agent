@@ -1,10 +1,11 @@
 "use client";
 
 import { ClipboardCheck, FileSearch, MessageSquareText, Play, ShieldCheck } from "lucide-react";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import type { AgentRun, LoanFile } from "../lib/api";
 import {
   createLoan,
+  fetchLoans,
   fetchAuditLogs,
   fetchModelTraces,
   runAgentReview,
@@ -28,6 +29,26 @@ export function LoanWorkspace({ loans }: Props) {
   const [role, setRole] = useState("processor");
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [traces, setTraces] = useState<any[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    fetchLoans()
+      .then((loadedLoans) => {
+        if (!active) {
+          return;
+        }
+        setLoanFiles(loadedLoans);
+        setSelectedId((current) => current || loadedLoans[0]?.id || "");
+      })
+      .catch(() => {
+        if (active) {
+          setLoanFiles([]);
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const selected = useMemo(
     () => loanFiles.find((loan) => loan.id === selectedId) || loanFiles[0],
@@ -104,7 +125,7 @@ export function LoanWorkspace({ loans }: Props) {
   }
 
   if (!selected) {
-    return <main className="shell">No loan files available.</main>;
+    return <main className="shell">Loading loan files...</main>;
   }
 
   const ltv = selected.property_value > 0 ? selected.loan_amount / selected.property_value : 0;
