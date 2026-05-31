@@ -1,6 +1,7 @@
 const API_URL =
   typeof window === "undefined"
-    ? process.env.INTERNAL_API_URL || "http://backend:5001"
+    ? process.env.INTERNAL_API_URL ||
+      (process.env.INTERNAL_API_HOSTPORT ? `http://${process.env.INTERNAL_API_HOSTPORT}` : "http://backend:5001")
     : process.env.NEXT_PUBLIC_API_URL || "";
 
 export type LoanFile = {
