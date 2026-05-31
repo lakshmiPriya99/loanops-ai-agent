@@ -2,8 +2,11 @@
   "scripts": {
     "dev": "next dev -H 0.0.0.0 -p 3000",
     "build": "next build",
-    "start": "next start -H 0.0.0.0 -p 3000",
+    "start": "node .next/standalone/server.js",
     "lint": "next lint"
+  },
+  "engines": {
+    "node": "20.x"
   },
   "dependencies": {
     "next": "16.2.6",

@@ -25,11 +25,14 @@ services:
 
   - type: web
     name: loanops-frontend
-    runtime: docker
+    runtime: node
     plan: free
-    dockerfilePath: ./frontend/Dockerfile
-    dockerContext: ./frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
     envVars:
+      - key: HOSTNAME
+        value: 0.0.0.0
       - key: INTERNAL_API_HOSTPORT
         fromService:
           type: web
