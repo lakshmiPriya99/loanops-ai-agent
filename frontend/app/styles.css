@@ -35,10 +35,12 @@ button {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  min-width: 0;
   border-right: 1px solid var(--line);
   background: #111827;
   color: #fff;
   padding: 22px;
+  overflow-y: auto;
 }
 
 .brand {
@@ -74,6 +76,7 @@ nav {
   border: 0;
   border-radius: 8px;
   cursor: pointer;
+  min-width: 0;
 }
 
 .loan {
@@ -84,6 +87,14 @@ nav {
   background: transparent;
   color: #dbe4ef;
   text-align: left;
+}
+
+.loan strong,
+.loan span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .loan.active,
@@ -97,6 +108,7 @@ nav {
 }
 
 .new-loan {
+  width: 100%;
   min-height: 42px;
   background: #ffffff;
   color: #111827;
@@ -108,14 +120,15 @@ nav {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  width: 100%;
   min-height: 42px;
-  margin-top: auto;
   background: #e8eef8;
   color: #111827;
   font-weight: 700;
 }
 
 .role-select {
+  width: 100%;
   min-height: 40px;
   border: 1px solid #526079;
   border-radius: 8px;
@@ -449,6 +462,19 @@ h2 {
 
   .sidebar {
     position: static;
+    gap: 12px;
+    min-height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 18px;
+  }
+
+  .brand {
+    min-height: auto;
+  }
+
+  nav {
+    gap: 8px;
   }
 
   .metrics,
