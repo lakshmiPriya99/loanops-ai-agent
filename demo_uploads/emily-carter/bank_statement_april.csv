@@ -1,0 +1,6 @@
+date,description,amount,balance
+2026-04-01,opening balance,0,48250
+2026-04-05,payroll deposit,5900,54150
+2026-04-11,utilities,-320,53830
+2026-04-18,payroll deposit,5900,59730
+2026-04-30,ending balance,0,59730

@@ -1,0 +1,15 @@
+Flask==3.0.3
+flask-cors==4.0.1
+openai==1.109.1
+python-dotenv==1.0.1
+gunicorn==22.0.0
+pypdf==4.3.1
+redis==5.0.4
+rq==1.16.2
+Flask-SQLAlchemy==3.1.1
+psycopg[binary]==3.1.19
+Pillow==10.4.0
+pytesseract==0.3.13
+boto3==1.35.99
+google-cloud-storage==2.19.0
+firebase-admin==6.6.0

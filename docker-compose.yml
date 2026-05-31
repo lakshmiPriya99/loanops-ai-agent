@@ -1,0 +1,67 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    env_file: .env
+    ports:
+      - "5001:5001"
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql+psycopg://loanops:loanops@postgres:5432/loanops
+      DOCUMENT_STORAGE_PROVIDER: local
+    volumes:
+      - backend_uploads:/app/uploads
+    depends_on:
+      redis:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: ./backend
+    command: rq worker agent-runs --url redis://redis:6379/0
+    env_file: .env
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql+psycopg://loanops:loanops@postgres:5432/loanops
+      DOCUMENT_STORAGE_PROVIDER: local
+    volumes:
+      - backend_uploads:/app/uploads
+    depends_on:
+      redis:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      INTERNAL_API_URL: http://backend:5001
+      NEXT_PUBLIC_API_URL: http://localhost:5001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  redis:
+    image: redis:7-alpine
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: loanops
+      POSTGRES_USER: loanops
+      POSTGRES_PASSWORD: loanops
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U loanops -d loanops"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  backend_uploads:
+  postgres_data:

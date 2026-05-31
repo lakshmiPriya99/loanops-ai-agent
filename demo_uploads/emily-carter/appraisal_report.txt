@@ -1,0 +1,6 @@
+Residential Appraisal Report
+Borrower: Emily Carter
+Property type: Single-family primary residence
+Estimated market value: 535000
+Inspection status: Complete
+Summary: Appraisal supports the purchase transaction and current property value.

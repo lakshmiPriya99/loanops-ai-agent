@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: loanops-backend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: gunicorn app.main:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: loanops-postgres
+          property: connectionString
+      - key: ASYNC_BACKEND
+        value: sync
+      - key: DOCUMENT_STORAGE_PROVIDER
+        value: local
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: OPENAI_TIMEOUT_SECONDS
+        value: "6"
+
+  - type: web
+    name: loanops-frontend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    envVars:
+      - key: INTERNAL_API_HOSTPORT
+        fromService:
+          type: web
+          name: loanops-backend
+          property: hostport
+      - key: NEXT_PUBLIC_API_URL
+        value: ""
+
+databases:
+  - name: loanops-postgres
+    plan: free

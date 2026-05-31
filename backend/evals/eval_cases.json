@@ -1,0 +1,39 @@
+[
+  {
+    "name": "purchase file asks for appraisal",
+    "loan_id": "LN-1042",
+    "contains_missing": ["appraisal"],
+    "message_contains": ["Emily"],
+    "status_any": ["needs_borrower_follow_up", "high_risk_file"]
+  },
+  {
+    "name": "self-employed refinance asks for tax returns",
+    "loan_id": "LN-2099",
+    "contains_missing": ["tax returns", "title report"],
+    "finding_labels": ["Variable income"],
+    "status_any": ["needs_borrower_follow_up", "high_risk_file"]
+  },
+  {
+    "name": "high ltv file receives risk finding",
+    "loan": {
+      "id": "EVAL-HIGH-LTV",
+      "borrower": {
+        "name": "Taylor Reed",
+        "email": "taylor.reed@example.com",
+        "phone": "555-0100",
+        "annual_income": 88000,
+        "credit_score": 690
+      },
+      "loan_amount": 450000,
+      "property_value": 480000,
+      "loan_purpose": "purchase",
+      "property_type": "single-family primary residence",
+      "employment_type": "W2 salaried",
+      "uploaded_documents": [],
+      "document_records": [],
+      "notes": "High LTV purchase file with tight closing timeline."
+    },
+    "finding_labels": ["High LTV", "Credit review required"],
+    "status_any": ["high_risk_file"]
+  }
+]

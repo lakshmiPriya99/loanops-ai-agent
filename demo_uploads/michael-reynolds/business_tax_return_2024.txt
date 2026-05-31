@@ -1,0 +1,6 @@
+Business Tax Return Summary
+Borrower: Michael Reynolds
+Business: Reynolds Consulting LLC
+Tax year: 2024
+Net business income: 112000
+Income documentation type: tax return

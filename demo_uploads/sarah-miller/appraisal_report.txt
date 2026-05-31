@@ -1,0 +1,6 @@
+Residential Appraisal Report
+Borrower: Sarah Miller
+Property type: Two-unit primary residence
+Estimated market value: 640000
+Inspection status: Complete
+Summary: Appraisal supports the purchase transaction and two-unit occupancy plan.
